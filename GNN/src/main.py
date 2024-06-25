@@ -16,7 +16,7 @@ def load_dataset_from_pickle(pickle_file):
         raise ValueError("The loaded dataset is not a list of Data objects).")
 
 if __name__ == "__main__":    
-    train_pickle_file = 'GNN/data/AMD Chunk/train_dataset.pkl'
+    train_pickle_file = 'GNN/data/train_dataset.pkl'
     dataset = load_dataset_from_pickle(train_pickle_file)
 
     train_index = int(len(dataset) * 0.95)
@@ -32,11 +32,11 @@ if __name__ == "__main__":
     num_targets = train_dataset[0].y.shape[0]  # 2: 'ter.Mean' and 'ratio.Mean'
 
     model = gnn_model.GCN(num_features, num_targets)
+    
+    learning_rate = 0.001 #1e-3
+    num_epochs = 100
 
-    output_filepath = 'GNN/models/Abs_model.pth'
-    learning_rate = 0.01 #1e-3
-    num_epochs = 150
-
+    output_filepath = f'GNN/models/Abs_model_b{batch_size}_e{num_epochs}_lr{learning_rate}.pth'
 
     # print()
     # print('====================')
@@ -67,19 +67,19 @@ if __name__ == "__main__":
     # #     print()
     # exit()
     
-    train_model.train_model(train_loader, val_loader, model, output_filepath, learning_rate, num_epochs)
+    #train_model.train_model(train_loader, val_loader, model, output_filepath, learning_rate, num_epochs)
 
 
-    # test_pickle_file = 'GNN/data/AMD Chunk/test_dataset.pkl'
-    # model_path = 'GNN/models/Abs_model.pth'
+    test_pickle_file = 'GNN/data/test_dataset.pkl'
+    model_path = 'GNN\models\Abs_model_b20_e100_lr0.001.pth'
 
-    # test_dataset = load_dataset_from_pickle(test_pickle_file)
-    # test_loader = DataLoader(val_dataset)
+    test_dataset = load_dataset_from_pickle(test_pickle_file)
+    test_loader = DataLoader(val_dataset)
 
-    # model = gnn_model.GCN(num_features, num_targets)
-    # model.load_state_dict(torch.load(model_path))
+    model = gnn_model.GCN(num_features, num_targets)
+    model.load_state_dict(torch.load(model_path))
     
-    # test_acc.test_model(test_loader, model)
+    test_acc.test_model(test_loader, model)
 
 
 
